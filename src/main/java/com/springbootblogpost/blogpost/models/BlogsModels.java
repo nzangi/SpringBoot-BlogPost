@@ -3,7 +3,7 @@ package com.springbootblogpost.blogpost.models;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -18,8 +18,9 @@ public class BlogsModels {
     private int postId;
     @Column(name= "post_context")
     private String postContext;
-    @Column(name= "posted_date")
-    private Date postedDate;
+    @Column(nullable = false,name= "posted_date",columnDefinition = "TIMESTAMP")
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime postedDate;
     @Column(name= "post_author")
     private String postAuthor;
 }
