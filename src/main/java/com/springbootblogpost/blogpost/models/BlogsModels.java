@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,6 +22,7 @@ public class BlogsModels {
     @Column(nullable = false,name= "posted_date",columnDefinition = "TIMESTAMP")
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime postedDate;
-    @Column(name= "post_author")
-    private String postAuthor;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "post_author",referencedColumnName = "user_id")
+    private UserModels post_author;
 }

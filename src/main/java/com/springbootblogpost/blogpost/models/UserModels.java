@@ -3,6 +3,8 @@ package com.springbootblogpost.blogpost.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Entity
 @Table(name = "users",uniqueConstraints = {
@@ -13,6 +15,7 @@ import lombok.Data;
 public class UserModels {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Column(name= "user_id")
     private int id;
     @Column(name= "first_name")
@@ -26,8 +29,6 @@ public class UserModels {
     @Column(name= "password")
     private String password;
 
-
-
-
-
+    @OneToMany(mappedBy="post_author",cascade = CascadeType.REMOVE)
+    private List<BlogsModels> blogsModel;
 }
