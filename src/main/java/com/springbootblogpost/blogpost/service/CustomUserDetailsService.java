@@ -1,0 +1,24 @@
+package com.springbootblogpost.blogpost.service;
+
+import com.springbootblogpost.blogpost.models.UserModels;
+import com.springbootblogpost.blogpost.repository.UsersRepository;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+public class CustomUserDetailsService implements UserDetailsService {
+    private UsersRepository usersRepository;
+    public CustomUserDetailsService (UsersRepository usersRepository){
+        this.usersRepository = usersRepository;
+
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserModels user = usersRepository.findAllByUsername(username).orElseThrow(
+                () ->new UsernameNotFoundException(username+ " username was not found")
+        );
+
+        return new org.springframework.security.core.userdetails.User(user.getUsername(),user.getPassword());
+    }
+}
