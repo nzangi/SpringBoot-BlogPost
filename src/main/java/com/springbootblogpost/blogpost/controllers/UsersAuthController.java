@@ -3,6 +3,7 @@ package com.springbootblogpost.blogpost.controllers;
 import com.springbootblogpost.blogpost.DTOModels.LoginDTO;
 import com.springbootblogpost.blogpost.DTOModels.SignUpDTO;
 import com.springbootblogpost.blogpost.models.UserModels;
+import com.springbootblogpost.blogpost.models.UserRole;
 import com.springbootblogpost.blogpost.repository.UsersRepository;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.Authenticator;
+import java.util.Set;
 
 @RestController
 @RequestMapping("api/v1/users/auth")
@@ -57,10 +59,12 @@ public class UsersAuthController {
         user.setUsername(signUpDTO.getUsername());
         user.setEmail(signUpDTO.getEmail());
         user.setPassword(passwordEncoder.encode(signUpDTO.getPassword()));
+        user.setRoles(Set.of(UserRole.ROLE_USER)); // Assign ROLE_USER to the user
+
 
         usersRepository.save(user);
 
-        return new ResponseEntity<>("User registered succcessfully!",HttpStatus.CREATED);
+        return new ResponseEntity<>("User registered successfully!",HttpStatus.CREATED);
 
     }
 

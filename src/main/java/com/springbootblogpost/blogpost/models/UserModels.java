@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -28,6 +29,11 @@ public class UserModels {
     private String email;
     @Column(name= "password")
     private String password;
+
+    @ElementCollection(targetClass = UserRole.class)
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(EnumType.STRING)
+    private Set<UserRole> roles;
 
     @OneToMany(mappedBy="post_author",cascade = CascadeType.REMOVE)
     private List<BlogsModels> blogsModel;
