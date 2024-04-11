@@ -23,7 +23,7 @@ import java.net.Authenticator;
 import java.util.Set;
 
 @RestController
-@RequestMapping("api/v1/users/auth")
+@RequestMapping("/api/v1/users/auth")
 public class UsersAuthController {
     @Autowired
     private UsersRepository usersRepository;
@@ -41,8 +41,11 @@ public class UsersAuthController {
 
         return new ResponseEntity<>("User was signed in successfully!", HttpStatus.OK);
     }
+
+
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody SignUpDTO signUpDTO){
+        System.out.println("On Register Function !");
         //check if user exist in the DB
         if (usersRepository.existsByUsername(signUpDTO.getUsername())){
             return  new ResponseEntity<>("Username is already taken!",HttpStatus.BAD_REQUEST);
@@ -61,10 +64,9 @@ public class UsersAuthController {
         user.setPassword(passwordEncoder.encode(signUpDTO.getPassword()));
         user.setRoles(Set.of(UserRole.ROLE_USER)); // Assign ROLE_USER to the user
 
-
         usersRepository.save(user);
 
-        return new ResponseEntity<>("User registered successfully!",HttpStatus.CREATED);
+        return new ResponseEntity<>("User registered successfully!",HttpStatus.OK);
 
     }
 
