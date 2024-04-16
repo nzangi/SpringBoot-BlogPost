@@ -4,6 +4,7 @@ import com.springbootblogpost.blogpost.DTOModels.LoginDTO;
 import com.springbootblogpost.blogpost.DTOModels.SignUpDTO;
 import com.springbootblogpost.blogpost.models.UserModels;
 import com.springbootblogpost.blogpost.models.UserRole;
+import com.springbootblogpost.blogpost.repository.RoleRepository;
 import com.springbootblogpost.blogpost.repository.UsersRepository;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.Authenticator;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Set;
 
 @RestController
@@ -31,6 +34,8 @@ public class UsersAuthController {
     private AuthenticationManager authenticationManager;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private RoleRepository roleRepository;
 
     // Creat an user REST API
     @PostMapping("/login")
@@ -62,7 +67,10 @@ public class UsersAuthController {
         user.setUsername(signUpDTO.getUsername());
         user.setEmail(signUpDTO.getEmail());
         user.setPassword(passwordEncoder.encode(signUpDTO.getPassword()));
-        user.setRoles(Set.of(UserRole.ROLE_USER)); // Assign ROLE_USER to the user
+//        user.setRoles(Set.of(UserRole.ROLE_USER)); // Assign ROLE_USER to the user
+        UserRole userRole = roleRepository.findByRoleName("ROLE_USER").get();
+        user.setRoles(Collections.singleton(userRole));
+
 
         usersRepository.save(user);
 

@@ -31,17 +31,16 @@ public class CustomUserDetailsService implements UserDetailsService {
                 () ->new UsernameNotFoundException(username+ " username was not found")
 
         );
-        List<GrantedAuthority> authorities = getUserAuthorities(user);
+
+        Set<GrantedAuthority> authorities = user
+                .getRoles()
+                .stream()
+                .map((role) ->new SimpleGrantedAuthority(role.getRoleName())).collect(Collectors.toSet());
 
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),user.getPassword(),authorities
         );
     }
 
-    private List<GrantedAuthority> getUserAuthorities(UserModels user){
-        Set<UserRole> roles = user.getRoles();
-        return roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.toString()))
-                .collect(Collectors.toList());
-    }
+
 }
