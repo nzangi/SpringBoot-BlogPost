@@ -15,10 +15,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.Authenticator;
 import java.util.Collection;
@@ -37,6 +34,7 @@ public class UsersAuthController {
     @Autowired
     private RoleRepository roleRepository;
 
+    private boolean isUserLoggedOut = false; // Flag to track logout status
     // Creat an user REST API
     @PostMapping("/login")
     public ResponseEntity<String> authenticateUser(@RequestBody LoginDTO loginDTO){
@@ -71,11 +69,22 @@ public class UsersAuthController {
         UserRole userRole = roleRepository.findByRoleName("ROLE_USER").get();
         user.setRoles(Collections.singleton(userRole));
 
-
         usersRepository.save(user);
 
         return new ResponseEntity<>("User registered successfully!",HttpStatus.OK);
-
     }
+
+    @DeleteMapping("/logout")
+    public ResponseEntity<String> logoutUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication != null && !isUserLoggedOut){
+            SecurityContextHolder.clearContext();
+            isUserLoggedOut=true;
+            return new ResponseEntity<>("User logged out successfully!",HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("No user is currently logged in!",HttpStatus.BAD_REQUEST);
+    }
+
 
 }
