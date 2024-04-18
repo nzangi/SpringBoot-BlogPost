@@ -36,10 +36,11 @@ public class UsersAuthController {
 
     private boolean isUserLoggedOut = false; // Flag to track logout status
     // Creat an user REST API
+
     @PostMapping("/login")
     public ResponseEntity<String> authenticateUser(@RequestBody LoginDTO loginDTO){
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUsername(),loginDTO.getPassword()));
-
+        System.out.println("Loggin In User");
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         return new ResponseEntity<>("User was signed in successfully!", HttpStatus.OK);
