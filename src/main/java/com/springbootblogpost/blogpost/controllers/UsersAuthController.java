@@ -39,17 +39,20 @@ public class UsersAuthController {
 
     @PostMapping("/login")
     public ResponseEntity<String> authenticateUser(@RequestBody LoginDTO loginDTO){
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUsername(),loginDTO.getPassword()));
-        System.out.println("Loggin In User");
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        try {
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUsername(),loginDTO.getPassword()));
+            System.out.println("User authenticated successfully: " + loginDTO.getUsername());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            return new ResponseEntity<>("User was signed in successfully!", HttpStatus.OK);
+        }catch (Exception e){
+            System.out.println("Authentication failed: " + e.getMessage());
+            return  new ResponseEntity<>("Wrong Username or Password. Authentication failed!",HttpStatus.UNAUTHORIZED);
+        }
 
-        return new ResponseEntity<>("User was signed in successfully!", HttpStatus.OK);
     }
-
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody SignUpDTO signUpDTO){
-        System.out.println("On Register Function !");
         //check if user exist in the DB
         if (usersRepository.existsByUsername(signUpDTO.getUsername())){
             return  new ResponseEntity<>("Username is already taken!",HttpStatus.BAD_REQUEST);
@@ -83,7 +86,6 @@ public class UsersAuthController {
             isUserLoggedOut=true;
             return new ResponseEntity<>("User logged out successfully!",HttpStatus.OK);
         }
-
         return new ResponseEntity<>("No user is currently logged in!",HttpStatus.BAD_REQUEST);
     }
 

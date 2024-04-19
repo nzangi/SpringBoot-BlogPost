@@ -41,19 +41,20 @@ public class SecurityConfiguration {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
-        httpSecurity
-                .csrf(csrf ->csrf.csrfTokenRepository(new HttpSessionCsrfTokenRepository()))
+        httpSecurity.csrf(csrf ->csrf.disable())
                 .authorizeHttpRequests((authorize) ->
                         authorize.requestMatchers(HttpMethod.GET,"/api/**").permitAll()
                                 .requestMatchers("/api/v1/users/auth/**").permitAll()
                                 .anyRequest().authenticated()
-                        )
+                        );
 
-                .logout(logout -> logout
-                        .logoutUrl("/api/v1/users/auth/logout") // Logout URL
-                        .invalidateHttpSession(true) // Invalidate session
-                        .deleteCookies("JSESSIONID") //Delete cookies
-                );
+//                .logout(logout -> logout
+//                        .logoutUrl("/api/v1/users/auth/logout") // Logout URL
+//                        .deleteCookies("JSESSIONID","X-XSRF-TOKEN")
+//                                .invalidateHttpSession(true) // Invalidate session
+//
+//                        //Delete cookies
+//                );
 
         return httpSecurity.build();
     }
