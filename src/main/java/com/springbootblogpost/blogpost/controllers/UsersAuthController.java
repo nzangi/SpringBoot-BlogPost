@@ -62,6 +62,15 @@ public class UsersAuthController {
         if (usersRepository.existsByEmail(signUpDTO.getEmail())){
             return  new ResponseEntity<>("Email is already taken!",HttpStatus.BAD_REQUEST);
         }
+
+        if(signUpDTO.getUsername() == null ||
+                signUpDTO.getEmail() == null ||
+                signUpDTO.getFirstName() == null ||
+                signUpDTO.getLastName() == null ||
+                signUpDTO.getPassword() == null){
+            return  new ResponseEntity<>("All fields must be filled",HttpStatus.BAD_REQUEST);
+        }
+
         //create user object
         UserModels user = new UserModels();
         user.setFirstName(signUpDTO.getFirstName());
